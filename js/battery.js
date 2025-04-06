@@ -25,7 +25,17 @@ function updateBatteryStatus(battery) {
   //adding the const url for the robohash website
   const url = `https://robohash.org/${chargeLevel * 100}?set=set4`;
   const robot = document.getElementById("robot");
-  
+  fetch(url)
+    .then((response) => {
+      if (response.ok === false) {
+        throw new Error("Error with Robohash API.");
+      } //use blob as the image is not a text file or JSON
+      return response.blob();
+      //adding the robot image to the img tag
+    })
+    .then((img) => (robot.appendChild = img))
+    //adding a catch in case of errors
+    .catch((error) => (robot.textContent = error));
 }
 
 // STEP 2a: Using the getBattery() method of the navigator object,
@@ -44,4 +54,5 @@ navigator.getBattery().then((battery) => {
     updateBatteryStatus(battery);
   });
 });
+
 /* This script adapted from the excellent code examples found at https://www.w3.org/TR/battery-status/#examples and https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API */
